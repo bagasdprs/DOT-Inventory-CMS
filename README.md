@@ -51,13 +51,13 @@ The application uses a Relational Database with a **One-to-Many** relationship:
 
 ## 📸 Screenshots
 
-|                          Dashboard Overview                          |                            Product List                            |
-| :------------------------------------------------------------------: | :----------------------------------------------------------------: |
-| ![Dashboard](https://placehold.co/600x400?text=Dashboard+Screenshot) | ![Products](https://placehold.co/600x400?text=Products+Screenshot) |
+|              Dashboard Overview              |                Product List                |
+| :------------------------------------------: | :----------------------------------------: |
+| ![Dashboard](./docs/dashboard-inventory.jpg) | ![Products](./docs/products-inventory.jpg) |
 
-|                       User Management                        |                      Add New Category                      |
-| :----------------------------------------------------------: | :--------------------------------------------------------: |
-| ![Users](https://placehold.co/600x400?text=Users+Screenshot) | ![Form](https://placehold.co/600x400?text=Form+Screenshot) |
+|                User Management                 |                Add New Category                |
+| :--------------------------------------------: | :--------------------------------------------: |
+| ![Users](./docs/user-management-inventory.jpg) | ![Form](./docs/add-new-category-inventory.jpg) |
 
 ---
 
@@ -68,7 +68,7 @@ Follow these steps to run the project locally:
 1.  **Clone the repository**
 
     ```bash
-    git clone [https://github.com/username/inventory-pro.git](https://github.com/username/inventory-pro.git)
+    git clone `https://github.com/bagasdprs/DOT-Inventory-CMS.git`
     cd inventory-pro
     ```
 
@@ -109,8 +109,8 @@ Follow these steps to run the project locally:
 
 ---
 
-## 🎥 Video Demo
+<!-- ## 🎥 Video Demo
 
-[Click here to watch the demo video](#) ---
+[Click here to watch the demo video](#) --- -->
 
 Created by **Bagas Dwiprasandi** for Technical Challenge Submission.
