@@ -1,0 +1,93 @@
+<div class="space-y-6">
+
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Categories</h1>
+            <p class="text-slate-500 text-sm">Organize your products efficiently</p>
+        </div>
+
+        <div class="flex gap-3">
+            <div class="relative">
+                <input type="text" placeholder="Search categories..." class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
+                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <a href="/categories/create" class="group border-2 border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer h-full min-h-50">
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
+                <i class="fas fa-plus text-xl"></i>
+            </div>
+            <h3 class="font-semibold text-slate-600 group-hover:text-blue-700">Add Category</h3>
+            <p class="text-xs text-slate-400 mt-1">Create a new product group</p>
+        </a>
+
+        <% categories.forEach((cat, index) => {
+            // Logika Warna Background Icon (Biar variatif)
+            const colors = ['blue', 'purple', 'orange', 'emerald', 'indigo', 'rose'];
+            const color = colors[index % colors.length];
+        %>
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col hover:shadow-md transition-all relative group">
+
+            <div class="absolute top-4 right-4">
+                <button onclick="toggleMenu(event, 'menu-<%= cat.id %>')" class="w-8 h-8 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 flex items-center justify-center transition-colors focus:outline-none">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+
+                <div id="menu-<%= cat.id %>" class="dropdown-menu hidden absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl border border-slate-100 z-20 overflow-hidden transform origin-top-right transition-all">
+
+                    <a href="/categories/edit/<%= cat.id %>" class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors border-b border-slate-50">
+                        <i class="fas fa-pen w-6 text-xs"></i> Edit
+                    </a>
+
+                    <a href="/categories/delete/<%= cat.id %>" onclick="return confirm('Yakin hapus kategori ini?')" class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
+                        <i class="fas fa-trash w-6 text-xs"></i> Delete
+                    </a>
+                </div>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-<%= color %>-50 text-<%= color %>-600 flex items-center justify-center text-xl mb-4">
+                <i class="<%= cat.icon || 'fas fa-tags' %>"></i>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-800 mb-1"><%= cat.name %></h3>
+            <p class="text-sm text-slate-500 line-clamp-2 mb-6 flex-1 h-10">
+                <%= cat.description || 'No description provided.' %>
+            </p>
+
+            <div class="border-t border-slate-50 pt-4 flex items-center justify-between">
+                <div>
+                    <span class="block text-xs text-slate-400 font-semibold uppercase">Products</span>
+                    <span class="text-lg font-bold text-slate-800"><%= cat.productCount || 0 %></span>
+                </div>
+            </div>
+
+        </div>
+        <% }) %>
+
+    </div>
+</div>
+
+<script>
+    function toggleMenu(event, menuId) {
+        event.stopPropagation();
+
+        const menu = document.getElementById(menuId);
+        const isHidden = menu.classList.contains('hidden');
+
+        document.querySelectorAll('.dropdown-menu').forEach(el => {
+            el.classList.add('hidden');
+        });
+
+        if (isHidden) {
+            menu.classList.remove('hidden');
+        }
+    }
+
+    window.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu').forEach(el => {
+            el.classList.add('hidden');
+        });
+    });
+</script>

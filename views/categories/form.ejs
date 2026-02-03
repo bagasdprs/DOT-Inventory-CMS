@@ -1,0 +1,70 @@
+<div class="max-w-2xl mx-auto">
+
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800"><%= title %></h1>
+            <p class="text-slate-500 text-sm">Fill in the details below</p>
+        </div>
+        <a href="/categories" class="text-slate-500 hover:text-slate-700 text-sm">
+            <i class="fas fa-arrow-left mr-1"></i> Back
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+
+        <form action="<%= type === 'create' ? '/categories' : '/categories/update/' + category.id %>" method="POST">
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Category Name <span class="text-red-500">*</span></label>
+                <input type="text" name="name" required
+                    value="<%= category ? category.name : '' %>"
+                    placeholder="e.g. Smart Home Devices"
+                    class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                <textarea name="description" rows="3"
+                    placeholder="Briefly describe what this category covers..."
+                    class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"><%= category ? category.description : '' %></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Category Icon</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <%
+                        const icons = [
+                            { val: 'fas fa-tags', label: 'General' },
+                            { val: 'fas fa-laptop', label: 'Electronics' },
+                            { val: 'fas fa-couch', label: 'Furniture' },
+                            { val: 'fas fa-tshirt', label: 'Clothing' },
+                            { val: 'fas fa-shoe-prints', label: 'Footwear' },
+                            { val: 'fas fa-leaf', label: 'Garden' },
+                            { val: 'fas fa-briefcase', label: 'Office' },
+                            { val: 'fas fa-gamepad', label: 'Gaming' }
+                        ];
+                        const currentIcon = category ? category.icon : 'fas fa-tags';
+                    %>
+
+                    <% icons.forEach(icon => { %>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="icon" value="<%= icon.val %>" class="peer sr-only" <%= currentIcon === icon.val ? 'checked' : '' %>>
+                        <div class="border border-slate-200 rounded-lg p-3 flex flex-col items-center justify-center hover:bg-slate-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition-all">
+                            <i class="<%= icon.val %> text-xl mb-2"></i>
+                            <span class="text-xs font-medium"><%= icon.label %></span>
+                        </div>
+                    </label>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 font-medium transition-colors">
+                    <%= type === 'create' ? 'Save Category' : 'Update Category' %>
+                </button>
+                <a href="/categories" class="text-slate-500 hover:text-slate-700 px-4 py-2 text-sm font-medium">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</div>
