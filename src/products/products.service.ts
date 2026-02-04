@@ -4,7 +4,7 @@ import { Product } from './entities/product.entity';
 import { Category } from '../categories/entities/category.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual } from 'typeorm';
+import { Repository, LessThanOrEqual, ILike, FindOptionsWhere } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
@@ -13,11 +13,31 @@ export class ProductsService {
     private productRepository: Repository<Product>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return await this.productRepository.find({
+  async findAll(
+    search?: string,
+    categoryId?: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Product[]; total: number }> {
+    const whereCondition: FindOptionsWhere<Product> = {};
+
+    if (search) {
+      whereCondition.name = ILike(`%${search}%`);
+    }
+
+    if (categoryId) {
+      whereCondition.category = { id: Number(categoryId) };
+    }
+
+    const [data, total] = await this.productRepository.findAndCount({
+      where: whereCondition,
       relations: ['category'],
       order: { id: 'DESC' },
+      take: limit,
+      skip: (page - 1) * limit,
     });
+
+    return { data, total };
   }
 
   async countAll(): Promise<number> {
@@ -50,7 +70,7 @@ export class ProductsService {
   }
 
   async findLowStockSimple(): Promise<Product[]> {
-    const all = await this.findAll();
+    const all = await this.productRepository.find();
     return all.filter((p) => p.stock <= 5).slice(0, 5);
   }
 

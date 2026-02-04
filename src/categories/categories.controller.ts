@@ -3,11 +3,10 @@ import {
   Get,
   Post,
   Body,
-  // Patch,
   Param,
-  // Delete,
   Render,
   Redirect,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -17,14 +16,49 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  // @Get()
+  // @Render('categories/index')
+  // async findAll(@Query('search') search: string) {
+  //   const categories = await this.categoriesService.findAll(search);
+
+  //   return {
+  //     categories,
+  //     title: 'Categories Management',
+  //     path: '/categories',
+  //     query: { search },
+  //   };
+  // }
   @Get()
   @Render('categories/index')
-  async findAll() {
-    const categories = await this.categoriesService.findAll();
+  async findAll(
+    @Query('search') search: string,
+    @Query('page') page: number = 1, // Tangkap halaman, default 1
+  ) {
+    const limit = 8; // Kita set 8 saja supaya pas di grid (4 kolom x 2 baris)
+
+    // 1. Panggil service (sekarang dapet { data, total })
+    const { data, total } = await this.categoriesService.findAll(
+      search,
+      page,
+      limit,
+    );
+
+    const totalPages = Math.ceil(total / limit);
+
     return {
-      categories,
-      title: 'Category Management',
+      categories: data,
+      title: 'Categories Management',
       path: '/categories',
+      query: { search },
+      // Info pagination untuk tombol < dan >
+      pagination: {
+        currentPage: Number(page),
+        totalPages: totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        nextPage: Number(page) + 1,
+        prevPage: Number(page) - 1,
+      },
     };
   }
 

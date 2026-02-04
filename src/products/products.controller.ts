@@ -6,6 +6,7 @@ import {
   Param,
   Render,
   Redirect,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -21,22 +22,48 @@ export class ProductsController {
 
   @Get()
   @Render('products/index')
-  async findAll() {
-    const products = await this.productsService.findAll();
-    const [totalProducts, totalValue, lowStockProducts] = await Promise.all([
-      this.productsService.countAll(),
+  async findAll(
+    @Query('search') search: string,
+    @Query('categoryId') categoryId: string,
+    @Query('page') page: number = 1,
+  ) {
+    const limit = 10;
+
+    const { data, total } = await this.productsService.findAll(
+      search,
+      categoryId,
+      page,
+      limit,
+    );
+
+    const { data: categories } = await this.categoriesService.findAll();
+
+    const totalPages = Math.ceil(total / limit);
+
+    const [totalValue, lowStockProducts] = await Promise.all([
       this.productsService.getTotalValue(),
       this.productsService.findLowStockSimple(),
     ]);
 
     return {
-      products,
+      products: data,
+      categories,
       title: 'Daftar Produk',
       path: '/products',
       stats: {
-        totalProducts,
+        totalProducts: total,
         totalValue,
         lowStock: lowStockProducts.length,
+      },
+      query: { search, categoryId },
+
+      pagination: {
+        currentPage: Number(page),
+        totalPages: totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        nextPage: Number(page) + 1,
+        prevPage: Number(page) - 1,
       },
     };
   }

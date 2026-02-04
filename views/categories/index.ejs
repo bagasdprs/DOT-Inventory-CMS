@@ -1,23 +1,72 @@
 <div class="space-y-6">
 
-    <div class="flex justify-between items-center">
+    <!-- <div class="flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">Categories</h1>
             <p class="text-slate-500 text-sm">Organize your products efficiently</p>
         </div>
-
-        <div class="flex gap-3">
+        <form action="/categories" method="GET" class="flex gap-2">
             <div class="relative">
-                <input type="text" placeholder="Search categories..." class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
+                <input type="text" name="search" id="categorySearch" placeholder="Search categories..."
+                    class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white"
+                    value="<%= typeof query !== 'undefined' ? query.search : '' %>" autocomplete="off">
                 <i class="fas fa-search absolute left-3 top-2.5 text-slate-400"></i>
             </div>
-        </div>
-    </div>
 
+            <% if (typeof query !== 'undefined' && query.search) { %>
+            <a href="/categories"
+                class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
+                <i class="fas fa-times"></i>
+            </a>
+            <% } %>
+        </form>
+    </div> -->
+
+    <div class="flex items-center gap-3">
+        <form action="/categories" method="GET" class="flex gap-2 items-center">
+            <div class="relative">
+                <input type="text" name="search" id="categorySearch" placeholder="Search..."
+                    class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 bg-white w-48 md:w-64"
+                    value="<%= typeof query !== 'undefined' ? query.search : '' %>">
+                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400"></i>
+            </div>
+
+            <div class="flex items-center border border-slate-200 rounded-lg bg-white overflow-hidden ml-2">
+                <% if (pagination.hasPrevPage) { %>
+                <a href="/categories?page=<%= pagination.prevPage %>&search=<%= query.search || '' %>"
+                    class="px-3 py-2 hover:bg-slate-50 text-slate-600 border-r border-slate-200">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </a>
+                <% } else { %>
+                <button disabled
+                    class="px-3 py-2 bg-slate-50 text-slate-300 border-r border-slate-200 cursor-not-allowed">
+                    <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                <% } %>
+
+                <span class="px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50/50">
+                    <%= pagination.currentPage %>/<%= pagination.totalPages %>
+                </span>
+
+                <% if (pagination.hasNextPage) { %>
+                <a href="/categories?page=<%= pagination.nextPage %>&search=<%= query.search || '' %>"
+                    class="px-3 py-2 hover:bg-slate-50 text-slate-600">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </a>
+                <% } else { %>
+                <button disabled class="px-3 py-2 bg-slate-50 text-slate-300 cursor-not-allowed">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+                <% } %>
+            </div>
+        </form>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <a href="/categories/create" class="group border-2 border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer h-full min-h-50">
-            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
+        <a href="/categories/create"
+            class="group border-2 border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer h-full min-h-50">
+            <div
+                class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors">
                 <i class="fas fa-plus text-xl"></i>
             </div>
             <h3 class="font-semibold text-slate-600 group-hover:text-blue-700">Add Category</h3>
@@ -25,29 +74,33 @@
         </a>
 
         <% categories.forEach((cat, index) => {
-            // Logika Warna Background Icon (Biar variatif)
             const colors = ['blue', 'purple', 'orange', 'emerald', 'indigo', 'rose'];
             const color = colors[index % colors.length];
         %>
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col hover:shadow-md transition-all relative group">
-
+        <div
+            class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col hover:shadow-md transition-all relative group">
             <div class="absolute top-4 right-4">
-                <button onclick="toggleMenu(event, 'menu-<%= cat.id %>')" class="w-8 h-8 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 flex items-center justify-center transition-colors focus:outline-none">
+                <button onclick="toggleMenu(event, 'menu-<%= cat.id %>')"
+                    class="w-8 h-8 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 flex items-center justify-center transition-colors focus:outline-none">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
 
-                <div id="menu-<%= cat.id %>" class="dropdown-menu hidden absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl border border-slate-100 z-20 overflow-hidden transform origin-top-right transition-all">
+                <div id="menu-<%= cat.id %>"
+                    class="dropdown-menu hidden absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl border border-slate-100 z-20 overflow-hidden transform origin-top-right transition-all">
 
-                    <a href="/categories/edit/<%= cat.id %>" class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors border-b border-slate-50">
+                    <a href="/categories/edit/<%= cat.id %>"
+                        class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors border-b border-slate-50">
                         <i class="fas fa-pen w-6 text-xs"></i> Edit
                     </a>
 
-                    <a href="/categories/delete/<%= cat.id %>" onclick="return confirm('Yakin hapus kategori ini?')" class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
+                    <a href="/categories/delete/<%= cat.id %>" onclick="return confirm('Yakin hapus kategori ini?')"
+                        class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
                         <i class="fas fa-trash w-6 text-xs"></i> Delete
                     </a>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-lg bg-<%= color %>-50 text-<%= color %>-600 flex items-center justify-center text-xl mb-4">
+            <div
+                class="w-12 h-12 rounded-lg bg-<%= color %>-50 text-<%= color %>-600 flex items-center justify-center text-xl mb-4">
                 <i class="<%= cat.icon || 'fas fa-tags' %>"></i>
             </div>
 
@@ -62,10 +115,8 @@
                     <span class="text-lg font-bold text-slate-800"><%= cat.productCount || 0 %></span>
                 </div>
             </div>
-
         </div>
         <% }) %>
-
     </div>
 </div>
 
@@ -90,4 +141,21 @@
             el.classList.add('hidden');
         });
     });
+
+    const categorySearch = document.getElementById('categorySearch');
+    let categoryTimeout = null;
+
+    categorySearch.addEventListener('input', function (e) {
+        clearTimeout(categoryTimeout);
+        categoryTimeout = setTimeout(function () {
+            const query = e.target.value;
+            window.location.href = '/categories?search=' + query;
+        }, 800);
+    });
+
+    if (categorySearch.value) {
+        const val = categorySearch.value;
+        categorySearch.focus();
+        categorySearch.setSelectionRange(val.length, val.length);
+    }
 </script>

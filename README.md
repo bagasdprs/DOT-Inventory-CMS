@@ -109,6 +109,14 @@ Follow these steps to run the project locally:
 
 ---
 
+## 🔐 Access Demo
+
+To test the authentication features, you can use the following credentials or register a new account:
+
+- **Email:** admin.dot@dummy.com
+- **Password:** AdminDOT123!
+- **Role:** Admin
+
 <!-- ## 🎥 Video Demo
 
 [Click here to watch the demo video](#) --- -->
