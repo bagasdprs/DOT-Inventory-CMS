@@ -1,6 +1,12 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Res, Session } from '@nestjs/common';
+import { Response } from 'express';
 import { ProductsService } from './products/products.service';
 import { CategoriesService } from './categories/categories.service';
+import { UserPayload } from './auth/auth.service';
+
+interface DashboardSession {
+  user?: UserPayload;
+}
 
 @Controller()
 export class AppController {
@@ -10,8 +16,11 @@ export class AppController {
   ) {}
 
   @Get()
-  @Render('index')
-  async dashboard() {
+  async dashboard(@Session() session: DashboardSession, @Res() res: Response) {
+    if (!session.user) {
+      return res.redirect('/auth/login');
+    }
+
     const [
       totalProducts,
       totalValue,
@@ -26,7 +35,7 @@ export class AppController {
       this.categoriesService.countAll(),
     ]);
 
-    return {
+    return res.render('index', {
       title: 'Dashboard Overview',
       path: '/',
       stats: {
@@ -37,6 +46,7 @@ export class AppController {
       },
       recentProducts,
       lowStockProducts,
-    };
+      user: session.user,
+    });
   }
 }

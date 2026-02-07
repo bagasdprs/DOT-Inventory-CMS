@@ -12,6 +12,7 @@ import { ProductsService } from './products.service';
 import { CategoriesService } from '../categories/categories.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Category } from '../categories/entities/category.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -48,7 +49,7 @@ export class ProductsController {
     return {
       products: data,
       categories,
-      title: 'Daftar Produk',
+      title: 'Product List',
       path: '/products',
       stats: {
         totalProducts: total,
@@ -71,7 +72,11 @@ export class ProductsController {
   @Get('create')
   @Render('products/form')
   async createForm() {
-    const categories = await this.categoriesService.findAll();
+    const result = await this.categoriesService.findAll('', 1, 100);
+    const categories = result.data as Category[];
+
+    categories.sort((a, b) => a.name.localeCompare(b.name));
+
     return {
       title: 'Tambah Produk Baru',
       type: 'create',
@@ -91,7 +96,11 @@ export class ProductsController {
   @Render('products/form')
   async editForm(@Param('id') id: string) {
     const product = await this.productsService.findOne(+id);
-    const categories = await this.categoriesService.findAll();
+
+    const result = await this.categoriesService.findAll('', 1, 100);
+    const categories = result.data as Category[];
+
+    categories.sort((a, b) => a.name.localeCompare(b.name));
 
     return {
       title: 'Edit Produk',
@@ -112,5 +121,24 @@ export class ProductsController {
   @Redirect('/products')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
+  }
+
+  @Get(':id')
+  @Render('products/details')
+  async findOne(@Param('id') id: string) {
+    const product = await this.productsService.findOne(+id);
+
+    if (!product) {
+      return { title: 'Product Not Found', product: null, path: '/products' };
+    }
+
+    const stockStatus = this.productsService.getStockStatus(product.stock);
+
+    return {
+      title: `${product.name} - Detail Produk`,
+      product: product,
+      stockStatus: stockStatus,
+      path: '/products',
+    };
   }
 }

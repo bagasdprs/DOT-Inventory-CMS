@@ -116,4 +116,14 @@ export class ProductsService {
   async remove(id: number) {
     return await this.productRepository.delete(id);
   }
+
+  getStockStatus(stock: number): { text: string; color: string } {
+    if (stock > 50) {
+      return { text: 'In Stock', color: 'green' };
+    } else if (stock > 10) {
+      return { text: 'Low Stock', color: 'yellow' };
+    } else {
+      return { text: 'Critical', color: 'red' };
+    }
+  }
 }

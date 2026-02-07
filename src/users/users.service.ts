@@ -35,6 +35,10 @@ export class UsersService {
     return await this.userRepository.findOne({ where: { id } });
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { email } });
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
       const salt = await bcrypt.genSalt(10);
@@ -46,7 +50,6 @@ export class UsersService {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  // 5. DELETE USER
   async remove(id: number) {
     return await this.userRepository.delete(id);
   }

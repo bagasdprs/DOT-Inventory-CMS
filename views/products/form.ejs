@@ -6,7 +6,7 @@
         Fill in the details below to <%= type === 'create' ? 'add a new' : 'update the' %> product.
       </p>
     </div>
-    <a href="/products" class="text-slate-500 hover:text-slate-700 font-medium flex items-center gap-2">
+    <a href="/products" class="text-slate-500 hover:text-slate-700 font-medium flex items-center gap-2 transition-colors">
       <i class="fas fa-arrow-left"></i> Back to List
     </a>
   </div>
@@ -15,64 +15,190 @@
     <form action="<%= type === 'create' ? '/products' : '/products/update/' + product.id %>" method="POST">
 
       <div class="space-y-6">
+
+        <!-- Product Name (Full Width) -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">
+            Product Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            required
+            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+            placeholder="e.g. Wireless Headphones"
+            value="<%= product ? product.name : '' %>"
+          />
+        </div>
+
+        <!-- Grid 2 Columns: Price & Stock -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="col-span-2">
-            <label class="block text-sm font-medium text-slate-700 mb-1">Product Name <span class="text-red-500">*</span></label>
-            <input type="text" name="name" required class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="e.g. Wireless Headphones" value="<%= product ? product.name : '' %>" />
-          </div>
 
+          <!-- Price -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Price (IDR) <span class="text-red-500">*</span></label>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              Price (IDR) <span class="text-red-500">*</span>
+            </label>
             <div class="relative">
-              <span class="absolute left-3 top-2 text-slate-400">Rp</span>
-              <input type="number" name="price" required class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="0" value="<%= product ? product.price : '' %>" />
+              <span class="absolute left-3 top-2.5 text-slate-400 font-medium">Rp</span>
+              <input
+                type="number"
+                name="price"
+                required
+                class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                placeholder="0"
+                value="<%= product ? product.price : '' %>"
+              />
             </div>
           </div>
 
+          <!-- Stock -->
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Initial Stock <span class="text-red-500">*</span></label>
-            <input type="number" name="stock" required class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="0" value="<%= product ? product.stock : 0 %>" />
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              Initial Stock <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="stock"
+              required
+              class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+              placeholder="0"
+              value="<%= product ? product.stock : 0 %>"
+            />
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Category <span class="text-red-500">*</span></label>
-          <div class="relative">
-            <select name="categoryId" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none bg-white">
-              <option value="">-- Select Category --</option>
+        <!-- Grid 2 Columns: SKU & Category -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-              <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                <% categories.forEach(cat => { %>
-                  <option value="<%= cat.id %>" <%= product && product.category && product.category.id === cat.id ? 'selected' : '' %>>
-                    <%= cat.name %>
-                  </option>
-                <% }) %>
-              <% } else { %>
-                <option value="" disabled>No categories found. Please add category first.</option>
-              <% } %>
+          <!-- ⭐ TAMBAHAN: SKU Field -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              SKU (Stock Keeping Unit)
+              <span class="text-slate-400 text-xs font-normal ml-1">- Optional</span>
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-slate-400">
+                <i class="fas fa-barcode"></i>
+              </span>
+              <input
+                type="text"
+                name="sku"
+                class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                placeholder="e.g., SKU-102"
+                value="<%= product ? product.sku : '' %>"
+              />
+            </div>
+            <p class="text-xs text-slate-500 mt-1.5">Unique identifier for inventory tracking</p>
+          </div>
+          <!-- ⭐ END TAMBAHAN -->
 
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-              <i class="fas fa-chevron-down text-xs"></i>
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+              Category <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <select
+                name="categoryId"
+                required
+                class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 appearance-none bg-white transition-all cursor-pointer"
+              >
+                <option value="">-- Select Category --</option>
+
+                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                  <% categories.forEach(cat => { %>
+                    <option value="<%= cat.id %>" <%= product && product.category && product.category.id === cat.id ? 'selected' : '' %>>
+                      <%= cat.name %>
+                    </option>
+                  <% }) %>
+                <% } else { %>
+                  <option value="" disabled>No categories found. Please add category first.</option>
+                <% } %>
+
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                <i class="fas fa-chevron-down text-xs"></i>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- ⭐ TAMBAHAN: Image URL Field -->
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
-          <textarea name="description" rows="4" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Describe the product features..."><%= product ? product.description : '' %></textarea>
+          <label class="block text-sm font-medium text-slate-700 mb-2">
+            Product Image URL
+            <span class="text-slate-400 text-xs font-normal ml-1">- Optional</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-slate-400">
+              <i class="fas fa-image"></i>
+            </span>
+            <input
+              type="url"
+              name="image_url"
+              class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+              placeholder="https://example.com/image.jpg"
+              value="<%= product ? product.imageUrl : '' %>"
+            />
+          </div>
+          <p class="text-xs text-slate-500 mt-1.5">Direct URL to product image (must be publicly accessible)</p>
         </div>
+        <!-- ⭐ END TAMBAHAN -->
+
+        <!-- Description -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-2">
+            Description
+            <span class="text-slate-400 text-xs font-normal ml-1">- Optional</span>
+          </label>
+          <textarea
+            name="description"
+            rows="4"
+            class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all resize-none"
+            placeholder="Describe the product features, specifications, or any important details..."
+          ><%= product ? product.description : '' %></textarea>
+          <div class="flex justify-between items-center mt-1.5">
+            <p class="text-xs text-slate-500">Provide detailed information about the product</p>
+            <span class="text-xs text-slate-400" id="charCount">0 characters</span>
+          </div>
+        </div>
+
       </div>
 
+      <!-- Action Buttons -->
       <div class="mt-8 flex items-center gap-4 border-t border-slate-100 pt-6">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition-colors flex items-center gap-2">
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition-all flex items-center gap-2 hover:shadow-lg hover:scale-105"
+        >
           <i class="fas fa-save"></i>
           <%= type === 'create' ? 'Save Product' : 'Update Changes' %>
         </button>
 
-        <a href="/products" class="text-slate-500 hover:text-slate-700 font-medium px-4">Cancel</a>
+        <a href="/products" class="text-slate-500 hover:text-slate-700 font-medium px-4 transition-colors">
+          Cancel
+        </a>
       </div>
 
     </form>
   </div>
 </div>
+
+<!-- ⭐ TAMBAHAN: Character Counter Script -->
+<script>
+  // Character counter for description
+  const descTextarea = document.querySelector('textarea[name="description"]');
+  const charCount = document.getElementById('charCount');
+
+  if (descTextarea && charCount) {
+    const updateCount = () => {
+      const count = descTextarea.value.length;
+      charCount.textContent = count + ' character' + (count !== 1 ? 's' : '');
+    };
+
+    descTextarea.addEventListener('input', updateCount);
+    updateCount(); // Initial count
+  }
+</script>
+<!-- ⭐ END TAMBAHAN -->

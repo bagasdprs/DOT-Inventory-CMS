@@ -3,14 +3,15 @@
         <h1 class="text-2xl font-bold text-slate-800">Products</h1>
         <p class="text-slate-500 text-sm">Manage your inventory items</p>
     </div>
-    <a href="/products/create" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all flex items-center gap-2">
+    <a href="/products/create"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all flex items-center gap-2 hover:shadow-md hover:scale-105">
         <i class="fas fa-plus"></i> Add Product
     </a>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-md transition-shadow">
         <div>
             <div class="text-slate-500 text-sm font-medium mb-1">Total Products</div>
             <div class="text-3xl font-bold text-slate-800"><%= stats.totalProducts %></div>
@@ -20,7 +21,7 @@
         </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-md transition-shadow">
         <div>
             <div class="text-slate-500 text-sm font-medium mb-1">Total Asset Value</div>
             <div class="text-3xl font-bold text-slate-800">
@@ -32,14 +33,15 @@
         </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-md transition-shadow">
         <div>
             <div class="text-slate-500 text-sm font-medium mb-1">Low Stock Items</div>
             <div class="text-3xl font-bold <%= stats.lowStock > 0 ? 'text-red-500' : 'text-slate-800' %>">
                 <%= stats.lowStock %>
             </div>
         </div>
-        <div class="w-12 h-12 <%= stats.lowStock > 0 ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-400' %> rounded-lg flex items-center justify-center text-xl">
+        <div
+            class="w-12 h-12 <%= stats.lowStock > 0 ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-400' %> rounded-lg flex items-center justify-center text-xl">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
     </div>
@@ -47,175 +49,196 @@
 
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
 </div>
-    <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row gap-3 justify-between items-center">
+<div class="p-4 border-b border-slate-100 flex flex-col md:flex-row gap-3 justify-between items-center">
     <form action="/products" method="GET" class="flex flex-col md:flex-row gap-3 w-full md:w-auto items-center">
 
-            <div class="relative w-full md:w-48">
-                <select
-                    name="categoryId"
-                    onchange="this.form.submit()"
-                    class="w-full pl-3 pr-8 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none bg-white cursor-pointer"
-                >
-                    <option value="">Semua Kategori</option>
+        <div class="relative w-full md:w-48">
+            <select name="categoryId" onchange="this.form.submit()"
+                class="w-full pl-3 pr-8 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none bg-white cursor-pointer">
+                <option value="">Semua Kategori</option>
 
-                    <% categories.forEach(cat => { %>
-                        <option
-                            value="<%= cat.id %>"
-                            <%= (typeof query !== 'undefined' && query.categoryId == cat.id) ? 'selected' : '' %>
-                        >
-                            <%= cat.name %>
-                        </option>
-                    <% }) %>
-                </select>
+                <% categories.forEach(cat => { %>
+                <option value="<%= cat.id %>"
+                    <%= (typeof query !== 'undefined' && query.categoryId == cat.id) ? 'selected' : '' %>>
+                    <%= cat.name %>
+                </option>
+                <% }) %>
+            </select>
 
-                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500">
-                    <i class="fas fa-chevron-down text-xs"></i>
-                </div>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500">
+                <i class="fas fa-chevron-down text-xs"></i>
             </div>
+        </div>
 
-            <div class="relative w-full md:w-64">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                    <i class="fas fa-search"></i>
-                </span>
-                <input
-                    type="text"
-                    name="search"
-                    id="searchInput"
-                    placeholder="Cari produk..."
-                    class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    value="<%= typeof query !== 'undefined' ? query.search : '' %>"
-                    autocomplete="off"
-                >
-            </div>
+        <div class="relative w-full md:w-64">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" name="search" id="searchInput" placeholder="Cari produk..."
+                class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                value="<%= typeof query !== 'undefined' ? query.search : '' %>" autocomplete="off">
+        </div>
 
-            <% if ((typeof query !== 'undefined') && (query.search || query.categoryId)) { %>
-                <a href="/products" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors" title="Reset Filter">
-                    <i class="fas fa-times"></i>
-                </a>
-            <% } %>
+        <% if ((typeof query !== 'undefined') && (query.search || query.categoryId)) { %>
+        <a href="/products"
+            class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            title="Reset Filter">
+            <i class="fas fa-times"></i>
+        </a>
+        <% } %>
     </form>
 </div>
 
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider font-semibold">
-                    <th class="p-4 border-b border-slate-100">Product Name</th>
-                    <th class="p-4 border-b border-slate-100">Category</th>
-                    <th class="p-4 border-b border-slate-100">Price</th>
-                    <th class="p-4 border-b border-slate-100">Stock</th>
-                    <th class="p-4 border-b border-slate-100">Status</th>
-                    <th class="p-4 border-b border-slate-100 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-sm divide-y divide-slate-100">
+<div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider font-semibold">
+                <th class="p-4 border-b border-slate-100">Product Name</th>
+                <!-- ⭐ TAMBAHAN: Kolom SKU -->
+                <th class="p-4 border-b border-slate-100">SKU</th>
+                <!-- ⭐ END -->
+                <th class="p-4 border-b border-slate-100">Category</th>
+                <th class="p-4 border-b border-slate-100">Price</th>
+                <th class="p-4 border-b border-slate-100">Stock</th>
+                <th class="p-4 border-b border-slate-100">Status</th>
+                <th class="p-4 border-b border-slate-100 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="text-sm divide-y divide-slate-100">
+            <% if (products && products.length > 0) { %>
+            <% products.forEach(product => { %>
+            <tr class="hover:bg-slate-50/50 transition-all group">
 
-                <% if (products && products.length > 0) { %>
-                    <% products.forEach(product => { %>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="p-4 font-medium text-slate-800">
-                            <%= product.name %>
-                            <div class="text-xs text-slate-400 font-normal mt-0.5"><%= product.description ? product.description.substring(0, 30) + '...' : '-' %></div>
-                        </td>
-                        <td class="p-4 text-slate-600"><%= product.category ? product.category.name : 'Uncategorized' %></td>
-                        <td class="p-4 font-medium text-slate-800">Rp <%= Number(product.price).toLocaleString('id-ID') %></td>
-                        <td class="p-4 text-slate-600"><%= product.stock %></td>
-                        <td class="p-4">
-                            <% if (product.stock > 10) { %>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-200">
-                                    In Stock
-                                </span>
-                            <% } else if (product.stock > 0) { %>
-                                <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-medium border border-orange-200">
-                                    Low Stock
-                                </span>
-                            <% } else { %>
-                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium border border-red-200">
-                                    Out of Stock
-                                </span>
-                            <% } %>
-                        </td>
-                        <td class="p-4 text-right">
-                            <a href="/products/edit/<%= product.id %>" class="text-blue-600 hover:text-blue-800 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="/products/delete/<%= product.id %>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure?')">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <% }) %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="6" class="p-8 text-center text-slate-500">
-                            <div class="flex flex-col items-center justify-center">
-                                <i class="fas fa-box-open text-4xl text-slate-300 mb-3"></i>
-                                <p>No products found.</p>
-                                <a href="/products/create" class="text-blue-500 text-sm mt-2 hover:underline">Create your first product</a>
-                            </div>
-                        </td>
-                    </tr>
-                <% } %>
+                <td class="p-4 font-medium text-slate-800">
+                    <%= product.name %>
+                    <div class="text-xs text-slate-400 font-normal mt-0.5">
+                        <%= product.description ? product.description.substring(0, 30) + '...' : '-' %>
+                    </div>
+                </td>
 
-            </tbody>
-        </table>
-    </div>
+                <!-- ⭐ TAMBAHAN: Data SKU -->
+                <td class="p-4">
+                    <% if (product.sku) { %>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md text-xs font-mono font-medium">
+                            <i class="fas fa-barcode text-slate-500"></i>
+                            <%= product.sku %>
+                        </span>
+                    <% } else { %>
+                        <span class="text-slate-400 text-xs">-</span>
+                    <% } %>
+                </td>
+                <!-- ⭐ END -->
 
-    <div class="p-4 border-t border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center text-sm text-slate-500">
+                <td class="p-4 text-slate-600">
+                    <%= product.category ? product.category.name : 'Uncategorized' %>
+                </td>
 
-        <span>
-            Showing
-            <span class="font-bold text-slate-700"><%= (pagination.currentPage - 1) * 10 + 1 %></span>
-            to
-            <span class="font-bold text-slate-700"><%= Math.min(pagination.currentPage * 10, stats.totalProducts) %></span>
-            of
-            <span class="font-bold text-slate-700"><%= stats.totalProducts %></span>
-            results
+                <td class="p-4 font-medium text-slate-800">
+                    Rp <%= Number(product.price).toLocaleString('id-ID') %>
+                </td>
+
+                <td class="p-4 text-slate-600"><%= product.stock %></td>
+
+                <td class="p-4">
+                    <% if (product.stock > 10) { %>
+                    <span
+                        class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-200">In
+                        Stock</span>
+                    <% } else if (product.stock > 0) { %>
+                    <span
+                        class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-medium border border-orange-200">Low
+                        Stock</span>
+                    <% } else { %>
+                    <span
+                        class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium border border-red-200">Out
+                        of Stock</span>
+                    <% } %>
+                </td>
+
+                <td class="p-4">
+                    <div class="flex items-center justify-end gap-2">
+
+                        <!-- ⭐ MODIFIED: View Detail → Redirect ke Full Page -->
+                        <a href="/products/<%= product.id %>"
+                            class="text-teal-600 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 p-2 rounded-lg transition-all hover:scale-110"
+                            title="View Full Details">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <!-- ⭐ END MODIFIED -->
+
+                        <a href="/products/edit/<%= product.id %>"
+                            class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition-all hover:scale-110"
+                            title="Edit Product">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a href="/products/delete/<%= product.id %>" onclick="return confirm('Are you sure?')"
+                            class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-all hover:scale-110"
+                            title="Delete Product">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <% }) %>
+            <% } else { %>
+            <tr>
+                <td colspan="7" class="p-12 text-center text-slate-400">
+                    <i class="fas fa-box-open text-5xl mb-4 block"></i>
+                    <p class="text-lg font-medium">No products found</p>
+                    <p class="text-sm mt-2">Try adjusting your search or filters</p>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <% if (pagination.hasPrevPage) { %>
+        <a href="/products?page=<%= pagination.prevPage %>&search=<%= query.search || '' %>&categoryId=<%= query.categoryId || '' %>"
+            class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-all font-medium hover:shadow-sm">
+            <i class="fas fa-chevron-left mr-1"></i> Previous
+        </a>
+        <% } else { %>
+        <button disabled
+            class="px-4 py-2 border border-slate-100 rounded-lg bg-slate-50 text-slate-300 cursor-not-allowed">
+            <i class="fas fa-chevron-left mr-1"></i> Previous
+        </button>
+        <% } %>
+
+        <span class="px-2 text-slate-400 font-medium text-xs">
+            Page <%= pagination.currentPage %> / <%= pagination.totalPages %>
         </span>
 
-        <div class="flex items-center gap-2">
+        <% if (pagination.hasNextPage) { %>
+        <a href="/products?page=<%= pagination.nextPage %>&search=<%= query.search || '' %>&categoryId=<%= query.categoryId || '' %>"
+            class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-all font-medium hover:shadow-sm">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+        </a>
+        <% } else { %>
+        <button disabled
+            class="px-4 py-2 border border-slate-100 rounded-lg bg-slate-50 text-slate-300 cursor-not-allowed">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+        </button>
+        <% } %>
 
-            <% if (pagination.hasPrevPage) { %>
-                <a href="/products?page=<%= pagination.prevPage %>&search=<%= query.search || '' %>&categoryId=<%= query.categoryId || '' %>"
-                   class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors font-medium">
-                   <i class="fas fa-chevron-left mr-1"></i> Previous
-                </a>
-            <% } else { %>
-                <button disabled class="px-4 py-2 border border-slate-100 rounded-lg bg-slate-50 text-slate-300 cursor-not-allowed">
-                    <i class="fas fa-chevron-left mr-1"></i> Previous
-                </button>
-            <% } %>
-
-            <span class="px-2 text-slate-400 font-medium text-xs">
-                Page <%= pagination.currentPage %> / <%= pagination.totalPages %>
-            </span>
-
-            <% if (pagination.hasNextPage) { %>
-                <a href="/products?page=<%= pagination.nextPage %>&search=<%= query.search || '' %>&categoryId=<%= query.categoryId || '' %>"
-                   class="px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition-colors font-medium">
-                   Next <i class="fas fa-chevron-right ml-1"></i>
-                </a>
-            <% } else { %>
-                <button disabled class="px-4 py-2 border border-slate-100 rounded-lg bg-slate-50 text-slate-300 cursor-not-allowed">
-                    Next <i class="fas fa-chevron-right ml-1"></i>
-                </button>
-            <% } %>
-
-        </div>
     </div>
+</div>
 </div>
 
 <script>
     const searchInput = document.getElementById('searchInput');
     let timeout = null;
 
-    searchInput.addEventListener('input', function(e) {
+    searchInput.addEventListener('input', function (e) {
         clearTimeout(timeout);
 
-        timeout = setTimeout(function() {
+        timeout = setTimeout(function () {
             const query = e.target.value;
             window.location.href = '/products?search=' + query;
-        }, 800);
+        }, 500);
     });
 
     const val = searchInput.value;

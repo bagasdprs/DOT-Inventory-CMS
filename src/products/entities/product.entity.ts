@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 
@@ -23,6 +24,15 @@ export class Product {
 
   @Column({ default: 0 })
   stock: number;
+
+  @Column({ nullable: true })
+  image_url: string;
+
+  @Column({ nullable: true })
+  sku: string;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @ManyToOne(() => Category, (category) => category.products, {
     onDelete: 'SET NULL',

@@ -21,27 +21,6 @@ export class CategoriesService {
     return await this.categoryRepository.save(createCategoryDto);
   }
 
-  // async findAll(search?: string): Promise<any[]> {
-  //   const whereCondition: FindOptionsWhere<Category> = {};
-
-  //   if (search) {
-  //     whereCondition.name = ILike(`%${search}%`);
-  //   }
-
-  //   const queryBuilder = this.categoryRepository
-  //     .createQueryBuilder('category')
-  //     .leftJoinAndSelect('category.products', 'product')
-  //     .loadRelationCountAndMap('category.productCount', 'category.products');
-
-  //   if (search) {
-  //     queryBuilder.where('category.name ILIKE :search', {
-  //       search: `%${search}%`,
-  //     });
-  //   }
-
-  //   return await queryBuilder.orderBy('category.id', 'DESC').getMany();
-  // }
-  // Tambahkan parameter page dan limit
   async findAll(
     search?: string,
     page: number = 1,

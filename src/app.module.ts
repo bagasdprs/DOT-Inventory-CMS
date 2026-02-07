@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -33,6 +34,7 @@ import { Product } from './products/entities/product.entity';
     UsersModule,
     CategoriesModule,
     ProductsModule,
+    AuthModule,
   ],
 
   controllers: [AppController],
