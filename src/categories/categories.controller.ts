@@ -7,6 +7,7 @@ import {
   Render,
   Redirect,
   Query,
+  Req,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -16,27 +17,14 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  // @Get()
-  // @Render('categories/index')
-  // async findAll(@Query('search') search: string) {
-  //   const categories = await this.categoriesService.findAll(search);
-
-  //   return {
-  //     categories,
-  //     title: 'Categories Management',
-  //     path: '/categories',
-  //     query: { search },
-  //   };
-  // }
   @Get()
   @Render('categories/index')
   async findAll(
     @Query('search') search: string,
-    @Query('page') page: number = 1, // Tangkap halaman, default 1
+    @Query('page') page: number = 1,
   ) {
-    const limit = 8; // Kita set 8 saja supaya pas di grid (4 kolom x 2 baris)
+    const limit = 8;
 
-    // 1. Panggil service (sekarang dapet { data, total })
     const { data, total } = await this.categoriesService.findAll(
       search,
       page,
@@ -50,7 +38,6 @@ export class CategoriesController {
       title: 'Categories Management',
       path: '/categories',
       query: { search },
-      // Info pagination untuk tombol < dan >
       pagination: {
         currentPage: Number(page),
         totalPages: totalPages,
@@ -75,8 +62,16 @@ export class CategoriesController {
 
   @Post()
   @Redirect('/categories')
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoriesService.create(createCategoryDto);
+  async create(@Body() createCategoryDto: CreateCategoryDto, @Req() req: any) {
+    const result = await this.categoriesService.create(createCategoryDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Berhasil!',
+      message: 'Kategori baru berhasil ditambahkan.',
+    };
+
+    return result;
   }
 
   @Get('edit/:id')
@@ -91,18 +86,59 @@ export class CategoriesController {
     };
   }
 
+  @Get(':id')
+  @Render('categories/details')
+  async findOne(@Param('id') id: string) {
+    const category = await this.categoriesService.findOne(+id);
+    const totalItems = category.products.length;
+    const totalAssetValue = category.products.reduce((total, product) => {
+      return total + product.price * product.stock;
+    }, 0);
+
+    const lowStockItems = category.products.filter((p) => p.stock <= 10);
+    const lowStockCount = lowStockItems.length;
+
+    return {
+      title: `Detail Kategori: ${category.name}`,
+      category: category,
+      stats: {
+        totalItems,
+        totalAssetValue,
+        lowStockCount,
+        lowStockItems,
+      },
+      user: { name: 'Admin' },
+    };
+  }
+
   @Post('update/:id')
   @Redirect('/categories')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
+    @Req() req: any,
   ) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+    const result = await this.categoriesService.update(+id, updateCategoryDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Update Berhasil!',
+      message: 'Data kategori berhasil diperbarui.',
+    };
+    return result;
   }
 
   @Get('delete/:id')
   @Redirect('/categories')
-  remove(@Param('id') id: string) {
-    return this.categoriesService.remove(+id);
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const result = await this.categoriesService.remove(+id);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Terhapus!',
+      message: 'Kategori berhasil dihapus.',
+    };
+
+    return result;
   }
 }

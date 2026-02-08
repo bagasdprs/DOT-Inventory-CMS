@@ -43,6 +43,11 @@ export class AuthController {
     if (user) {
       // --- SUCCESS ---
       session.user = user;
+      session.flash = {
+        type: 'success',
+        title: 'Login Berhasil!',
+        message: `Selamat datang kembali, ${user.name} 👋`,
+      };
       return res.redirect('/');
     } else {
       // --- FAILURE ---
@@ -61,9 +66,19 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res() res: Response,
+    @Req() req: any,
+  ) {
     try {
       await this.authService.register(registerDto);
+
+      req.session.flash = {
+        type: 'success',
+        title: 'Registrasi Berhasil',
+        message: 'Silakan login dengan akun barumu.',
+      };
 
       return res.redirect('/auth/login');
     } catch (error) {
@@ -77,8 +92,13 @@ export class AuthController {
 
   @Get('logout')
   logout(@Req() req: any, @Res() res: Response) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    req.session = null;
+    req.session.user = null;
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Logout Berhasil',
+      message: 'Sampai jumpa lagi! 👋',
+    };
 
     res.redirect('/auth/login');
   }

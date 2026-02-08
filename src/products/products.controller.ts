@@ -7,6 +7,7 @@ import {
   Render,
   Redirect,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -38,9 +39,7 @@ export class ProductsController {
     );
 
     const { data: categories } = await this.categoriesService.findAll();
-
     const totalPages = Math.ceil(total / limit);
-
     const [totalValue, lowStockProducts] = await Promise.all([
       this.productsService.getTotalValue(),
       this.productsService.findLowStockSimple(),
@@ -88,8 +87,16 @@ export class ProductsController {
 
   @Post()
   @Redirect('/products')
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto, @Req() req: any) {
+    const result = await this.productsService.create(createProductDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Produk Ditambahkan',
+      message: 'Data produk baru berhasil disimpan.',
+    };
+
+    return result;
   }
 
   @Get('edit/:id')
@@ -113,14 +120,34 @@ export class ProductsController {
 
   @Post('update/:id')
   @Redirect('/products')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+    @Req() req: any,
+  ) {
+    const result = await this.productsService.update(+id, updateProductDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Update Berhasil',
+      message: 'Data produk berhasil diperbarui.',
+    };
+
+    return result;
   }
 
   @Get('delete/:id')
   @Redirect('/products')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const result = await this.productsService.remove(+id);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'Produk Dihapus',
+      message: 'Data produk telah dihapus dari database.',
+    };
+
+    return result;
   }
 
   @Get(':id')

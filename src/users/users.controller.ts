@@ -6,6 +6,7 @@ import {
   Param,
   Render,
   Redirect,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -42,8 +43,16 @@ export class UsersController {
   // 3. ACTION CREATE
   @Post()
   @Redirect('/users')
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto, @Req() req: any) {
+    const result = await this.usersService.create(createUserDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'User Ditambahkan',
+      message: 'Pengguna baru berhasil dibuat.',
+    };
+
+    return result;
   }
 
   // 4. FORM EDIT
@@ -62,14 +71,34 @@ export class UsersController {
   // 5. ACTION UPDATE
   @Post('update/:id')
   @Redirect('/users')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() req: any,
+  ) {
+    const result = await this.usersService.update(+id, updateUserDto);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'User Diupdate',
+      message: 'Data pengguna berhasil diperbarui.',
+    };
+
+    return result;
   }
 
   // 6. ACTION DELETE
   @Get('delete/:id')
   @Redirect('/users')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const result = await this.usersService.remove(+id);
+
+    req.session.flash = {
+      type: 'success',
+      title: 'User Dihapus',
+      message: 'Pengguna berhasil dihapus.',
+    };
+
+    return result;
   }
 }
