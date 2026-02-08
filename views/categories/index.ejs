@@ -1,27 +1,5 @@
 <div class="space-y-6">
 
-    <!-- <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Categories</h1>
-            <p class="text-slate-500 text-sm">Organize your products efficiently</p>
-        </div>
-        <form action="/categories" method="GET" class="flex gap-2">
-            <div class="relative">
-                <input type="text" name="search" id="categorySearch" placeholder="Search categories..."
-                    class="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white"
-                    value="<%= typeof query !== 'undefined' ? query.search : '' %>" autocomplete="off">
-                <i class="fas fa-search absolute left-3 top-2.5 text-slate-400"></i>
-            </div>
-
-            <% if (typeof query !== 'undefined' && query.search) { %>
-            <a href="/categories"
-                class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center">
-                <i class="fas fa-times"></i>
-            </a>
-            <% } %>
-        </form>
-    </div> -->
-
     <div class="flex items-center gap-3">
         <form action="/categories" method="GET" class="flex gap-2 items-center">
             <div class="relative">
@@ -61,6 +39,7 @@
             </div>
         </form>
     </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <a href="/categories/create"
@@ -79,6 +58,7 @@
         %>
         <div
             class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col hover:shadow-md transition-all relative group">
+
             <div class="absolute top-4 right-4">
                 <button onclick="toggleMenu(event, 'menu-<%= cat.id %>')"
                     class="w-8 h-8 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 flex items-center justify-center transition-colors focus:outline-none">
@@ -86,8 +66,12 @@
                 </button>
 
                 <div id="menu-<%= cat.id %>"
-                    class="dropdown-menu hidden absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl border border-slate-100 z-20 overflow-hidden transform origin-top-right transition-all">
+                    class="dropdown-menu hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl border border-slate-100 z-20 overflow-hidden transform origin-top-right transition-all">
 
+                    <a href="/categories/<%= cat.id %>"
+                        class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors border-b border-slate-50">
+                        <i class="fas fa-eye w-6 text-xs"></i> View Details
+                    </a>
                     <a href="/categories/edit/<%= cat.id %>"
                         class="flex items-center px-4 py-3 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors border-b border-slate-50">
                         <i class="fas fa-pen w-6 text-xs"></i> Edit
@@ -99,6 +83,7 @@
                     </a>
                 </div>
             </div>
+
             <div
                 class="w-12 h-12 rounded-lg bg-<%= color %>-50 text-<%= color %>-600 flex items-center justify-center text-xl mb-4">
                 <i class="<%= cat.icon || 'fas fa-tags' %>"></i>
