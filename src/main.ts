@@ -11,42 +11,46 @@ async function bootstrap() {
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
   let cookieSession = require('cookie-session');
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (cookieSession.default) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     cookieSession = cookieSession.default;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
   let expressLayouts = require('express-ejs-layouts');
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (expressLayouts.default) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     expressLayouts = expressLayouts.default;
   }
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('ejs');
 
   app.use(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     cookieSession({
       name: 'session',
       keys: ['rahasia_dapur_dot_indonesia_kunci_panjang'],
-      maxAge: 24 * 60 * 60 * 1000, // 24 jam
+      maxAge: 24 * 60 * 60 * 1000,
     }),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   app.use(expressLayouts);
-
   app.set('layout', 'layouts/base');
 
   // 5. MIDDLEWARE USER
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: Response, next: NextFunction) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     res.locals.user = req.session?.user || null;
+    next();
+  });
+
+  app.use((req: any, res: Response, next: NextFunction) => {
+    const flash = req.session?.flash;
+
+    if (req.session) {
+      req.session.flash = null;
+    }
+
+    res.locals.flash = flash;
+
     next();
   });
 
