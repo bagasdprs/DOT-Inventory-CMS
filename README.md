@@ -42,7 +42,6 @@ DOT Inventory is a modern, server-side rendered inventory management application
 
 ---
 
-````markdown
 ## 🗄️ Database Schema
 
 ### 1. Users Table (`public.user`)
@@ -110,6 +109,8 @@ views/
 ├── users/              # User Management UI
 └── index.ejs           # Dashboard
 ```
+
+````
 
 ## 📸 Screenshots
 
@@ -196,4 +197,8 @@ To test the authentication features, you can use the following credentials or re
 [Click here to watch the demo video](#) --- -->
 
 Created by **Bagas Dwiprasandi** for Technical Challenge Submission.
+
+```
+
+```
 ````
