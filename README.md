@@ -87,6 +87,8 @@ Inventory items linked to categories.
 
 _*Note*: The `User` table handles authentication, while `Product` has a Foreign Key (`category_id`) linking to `Category`._
 
+```
+
 ---
 
 ## 📂 Project Structure
