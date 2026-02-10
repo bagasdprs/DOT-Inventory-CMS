@@ -140,39 +140,39 @@ views/
 
 Follow these steps to run the project locally:
 
-1.  **Clone the repository**
+1. **Clone the repository**
 
-```bash
-    git clone [https://github.com/bagasdprs/DOT-Inventory-CMS.git](https://github.com/bagasdprs/DOT-Inventory-CMS.git)
-    cd DOT-Inventory-CMS
-```
+   ```bash
+   git clone (https://github.com/bagasdprs/DOT-Inventory-CMS.git)
+   cd DOT-Inventory-CMS
+   ```
 
-2.  **Install Dependencies**
+2. **Install Dependencies**
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
-3.  **Environment Setup**
-    Create a `.env` file in the root directory and configure your database connection:
+3. **Environment Setup**
+   Create a `.env` file in the root directory and configure your database connection:
 
-    ```env
-    DB_HOST=your-supabase-host.com
-    DB_PORT=5432
-    DB_USERNAME=postgres
-    DB_PASSWORD=your-password
-    DB_NAME=postgres
-    ```
+   ```env
+   DB_HOST=your-supabase-host.com
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=your-password
+   DB_NAME=postgres
+   ```
 
-4.  **Run the Application**
+4. **Run the Application**
 
-    ```bash
-    # Development mode
-    npm run start:dev
-    ```
+   ```bash
+   # Development mode
+   npm run start:dev
+   ```
 
-5.  **Access the App**
-    Open your browser and navigate to: `http://localhost:3000`
+5. **Access the App**
+   Open your browser and navigate to: `http://localhost:3000`
 
 ---
 
@@ -200,12 +200,4 @@ To test the authentication features, you can use the following credentials or re
 
 [Click here to watch the demo video](#) --- -->
 
-Created by **Bagas Dwiprasandi** for Technical Challenge Submission.
-
-```
-
-```
-
-```
-
-```
+Created by **Bagas Dwiprasandi** for Technical Challenge Submission.👨‍💻☕
