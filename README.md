@@ -44,8 +44,7 @@ DOT Inventory is a modern, server-side rendered inventory management application
 
 ## 🗄️ Database Schema
 
-````markdown
-
+```markdown
 ### 1. Users Table (`public.user`)
 
 Stores authentication data and role management.
@@ -86,7 +85,6 @@ Inventory items linked to categories.
 | `updated_at`  | TIMESTAMP | DEFAULT NOW() | Last modification time  |
 
 _*Note*: The `User` table handles authentication, while `Product` has a Foreign Key (`category_id`) linking to `Category`._
-
 ```
 
 ---
@@ -113,8 +111,6 @@ views/
 ├── users/              # User Management UI
 └── index.ejs           # Dashboard
 ```
-
-````
 
 ## 📸 Screenshots
 
@@ -205,4 +201,7 @@ Created by **Bagas Dwiprasandi** for Technical Challenge Submission.
 ```
 
 ```
-````
+
+```
+
+```
