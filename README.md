@@ -44,11 +44,11 @@ DOT Inventory is a modern, server-side rendered inventory management application
 
 ## 🗄️ Database Schema
 
-```markdown
 ### 1. Users Table (`public.user`)
 
 Stores authentication data and role management.
 
+```markdown
 | Column      | Type      | Constraints          | Description                       |
 | :---------- | :-------- | :------------------- | :-------------------------------- |
 | `id`        | SERIAL    | **PK**               | Unique identifier                 |
@@ -57,22 +57,26 @@ Stores authentication data and role management.
 | `password`  | VARCHAR   | NOT NULL             | Bcrypt hashed password            |
 | `role`      | VARCHAR   | DEFAULT 'staff'      | Authorization level (admin/staff) |
 | `createdAt` | TIMESTAMP | DEFAULT NOW()        | Account creation time             |
+```
 
 ### 2. Categories Table (`public.category`)
 
 Master data for grouping products.
 
+```markdown
 | Column        | Type    | Constraints           | Description                       |
 | :------------ | :------ | :-------------------- | :-------------------------------- |
 | `id`          | SERIAL  | **PK**                | Unique identifier                 |
 | `name`        | VARCHAR | NOT NULL              | Category name (e.g., Electronics) |
 | `description` | TEXT    | NULLABLE              | Optional details                  |
 | `icon`        | VARCHAR | DEFAULT 'fas fa-tags' | FontAwesome class string          |
+```
 
 ### 3. Products Table (`public.product`)
 
 Inventory items linked to categories.
 
+```markdown
 | Column        | Type      | Constraints   | Description             |
 | :------------ | :-------- | :------------ | :---------------------- |
 | `id`          | SERIAL    | **PK**        | Unique identifier       |
@@ -83,9 +87,9 @@ Inventory items linked to categories.
 | `sku`         | VARCHAR   | NULLABLE      | Stock Keeping Unit code |
 | `image_url`   | VARCHAR   | NULLABLE      | URL to product image    |
 | `updated_at`  | TIMESTAMP | DEFAULT NOW() | Last modification time  |
+```
 
 _*Note*: The `User` table handles authentication, while `Product` has a Foreign Key (`category_id`) linking to `Category`._
-```
 
 ---
 
