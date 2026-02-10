@@ -34,26 +34,25 @@ export class AuthController {
     @Session() session: Record<string, any>,
     @Res() res: Response,
   ) {
-    // USER VALIDATION
     const user = await this.authService.validateUser(
       loginDto.email,
       loginDto.password,
     );
 
     if (user) {
-      // --- SUCCESS ---
       session.user = user;
+
       session.flash = {
         type: 'success',
         title: 'Login Berhasil!',
         message: `Selamat datang kembali, ${user.name} 👋`,
       };
+
       return res.redirect('/');
     } else {
-      // --- FAILURE ---
       return res.render('auth/login', {
         layout: false,
-        message: 'Invalid Email or Password!',
+        error: 'Email atau Password salah! Silakan coba lagi.',
         oldEmail: loginDto.email,
       });
     }
