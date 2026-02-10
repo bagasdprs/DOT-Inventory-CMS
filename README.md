@@ -42,8 +42,9 @@ DOT Inventory is a modern, server-side rendered inventory management application
 
 ---
 
-````markdown
 ## 🗄️ Database Schema
+
+````markdown
 
 ### 1. Users Table (`public.user`)
 
