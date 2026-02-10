@@ -15,49 +15,119 @@ DOT Inventory is a modern, server-side rendered inventory management application
 - **One-to-Many Relation:** Organize products under specific categories.
 - **Dynamic Forms:** Add/Edit products with auto-populated category dropdowns.
 - **Rich Data:** Manage stock levels, pricing (IDR currency), and descriptions.
+- **Search & Pagination:** Efficient data retrieval with server-side pagination.
 
 ### 👥 User Management & Security
 
 - **Secure Authentication:** Implementation of `bcrypt` for password hashing.
 - **Role-Based Badges:** Visual distinction between Admin, Manager, and Staff.
 - **Auto-Avatar:** Automatic profile picture generation based on user initials.
-- **Strict Validation:** Regex-based password strength enforcement (Uppercase, Symbol, Number).
+- **Flash Messages:** Interactive feedback using SweetAlert2 (Toast notifications).
+- **Strict Validation:** Global pipes validation using `class-validator`.
 
 ---
 
 ## 🛠 Tech Stack & Dependencies
 
-- **Framework:** [NestJS](https://nestjs.com/) (Node.js Framework)
-- **Language:** TypeScript
-- **Database:** PostgreSQL (via Supabase)
-- **ORM:** TypeORM
-- **View Engine:** EJS (Embedded JavaScript)
-- **Styling:** Tailwind CSS (CDN)
-- **Security:** Bcrypt, Class-Validator, Helmet
+| Category          | Technology                                        |
+| :---------------- | :------------------------------------------------ |
+| **Framework**     | [NestJS](https://nestjs.com/) (Node.js Framework) |
+| **Language**      | TypeScript                                        |
+| **Database**      | PostgreSQL (Hosted on Supabase)                   |
+| **ORM**           | TypeORM                                           |
+| **View Engine**   | EJS (Embedded JavaScript) + Express Layouts       |
+| **Styling**       | Tailwind CSS (CDN) + FontAwesome                  |
+| **State/Session** | Cookie-Session                                    |
+| **UX/UI**         | SweetAlert2                                       |
 
 ---
 
-## 🗄️ Database Design
+````markdown
+## 🗄️ Database Schema
 
-The application uses a Relational Database with a **One-to-Many** relationship:
+### 1. Users Table (`public.user`)
 
-1.  **Users Table:** Stores credentials (`email`, `hashed_password`) and `role`.
-2.  **Categories Table:** Stores category metadata (`name`, `icon`).
-3.  **Products Table:** Stores inventory data (`name`, `price`, `stock`) and holds a Foreign Key linking to `Categories`.
+Stores authentication data and role management.
 
-> _Relationship: One Category has Many Products._
+| Column      | Type      | Constraints          | Description                       |
+| :---------- | :-------- | :------------------- | :-------------------------------- |
+| `id`        | SERIAL    | **PK**               | Unique identifier                 |
+| `name`      | VARCHAR   | NOT NULL             | Full name of the user             |
+| `email`     | VARCHAR   | **UNIQUE**, NOT NULL | User login email                  |
+| `password`  | VARCHAR   | NOT NULL             | Bcrypt hashed password            |
+| `role`      | VARCHAR   | DEFAULT 'staff'      | Authorization level (admin/staff) |
+| `createdAt` | TIMESTAMP | DEFAULT NOW()        | Account creation time             |
+
+### 2. Categories Table (`public.category`)
+
+Master data for grouping products.
+
+| Column        | Type    | Constraints           | Description                       |
+| :------------ | :------ | :-------------------- | :-------------------------------- |
+| `id`          | SERIAL  | **PK**                | Unique identifier                 |
+| `name`        | VARCHAR | NOT NULL              | Category name (e.g., Electronics) |
+| `description` | TEXT    | NULLABLE              | Optional details                  |
+| `icon`        | VARCHAR | DEFAULT 'fas fa-tags' | FontAwesome class string          |
+
+### 3. Products Table (`public.product`)
+
+Inventory items linked to categories.
+
+| Column        | Type      | Constraints   | Description             |
+| :------------ | :-------- | :------------ | :---------------------- |
+| `id`          | SERIAL    | **PK**        | Unique identifier       |
+| `category_id` | INT       | **FK**        | Links to `category.id`  |
+| `name`        | VARCHAR   | NOT NULL      | Product name            |
+| `price`       | INT       | NOT NULL      | Price in IDR            |
+| `stock`       | INT       | DEFAULT 0     | Current quantity        |
+| `sku`         | VARCHAR   | NULLABLE      | Stock Keeping Unit code |
+| `image_url`   | VARCHAR   | NULLABLE      | URL to product image    |
+| `updated_at`  | TIMESTAMP | DEFAULT NOW() | Last modification time  |
+
+_*Note*: The `User` table handles authentication, while `Product` has a Foreign Key (`category_id`) linking to `Category`._
 
 ---
+
+## 📂 Project Structure
+
+This project follows the strict Modular Architecture of NestJS:
+
+```bash
+src/
+├── auth/               # Authentication System (Login/Register/Session)
+├── categories/         # Category Business Logic & CRUD
+├── products/           # Product Inventory Management
+├── users/              # User Role & Account Management
+├── app.module.ts       # Root Module Configuration
+├── main.ts             # Application Entry Point
+└── types.d.ts          # Custom Type Definitions (Flash Messages)
+
+views/
+├── auth/               # Login & Register Interface
+├── categories/         # Category List & Detail Views
+├── layouts/            # Master Templates (Sidebar, Navbar, Footer)
+├── products/           # Product Management UI
+├── users/              # User Management UI
+└── index.ejs           # Dashboard
+```
 
 ## 📸 Screenshots
 
-|              Dashboard Overview              |                Product List                |
-| :------------------------------------------: | :----------------------------------------: |
-| ![Dashboard](./docs/dashboard-inventory.jpg) | ![Products](./docs/products-inventory.jpg) |
+|            **Dashboard Overview**            |              **User Management**               |
+| :------------------------------------------: | :--------------------------------------------: |
+| ![Dashboard](./docs/dashboard-inventory.jpg) | ![Users](./docs/user-management-inventory.jpg) |
 
-|                User Management                 |                Add New Category                |
-| :--------------------------------------------: | :--------------------------------------------: |
-| ![Users](./docs/user-management-inventory.jpg) | ![Form](./docs/add-new-category-inventory.jpg) |
+|              **Product List**              |                    **Product Details**                    |
+| :----------------------------------------: | :-------------------------------------------------------: |
+| ![Products](./docs/products-inventory.jpg) | ![Product Details](./docs/product-details-inventory.jpeg) |
+
+|              **Category Management**              |                     **Category Details**                     |
+| :-----------------------------------------------: | :----------------------------------------------------------: |
+| ![Category List](./docs/category-management.jpeg) | ![Category Details](./docs/category-management-details.jpeg) |
+
+|                  **Add New Category**                  |     |
+| :----------------------------------------------------: | :-: |
+| ![Add Category](./docs/add-new-category-inventory.jpg) |     |
 
 ---
 
@@ -67,10 +137,10 @@ Follow these steps to run the project locally:
 
 1.  **Clone the repository**
 
-    ```bash
-    git clone `https://github.com/bagasdprs/DOT-Inventory-CMS.git`
-    cd inventory-pro
-    ```
+```bash
+    git clone [https://github.com/bagasdprs/DOT-Inventory-CMS.git](https://github.com/bagasdprs/DOT-Inventory-CMS.git)
+    cd DOT-Inventory-CMS
+```
 
 2.  **Install Dependencies**
 
@@ -103,9 +173,13 @@ Follow these steps to run the project locally:
 
 ## 📝 MVC Implementation Details
 
-- **Model (Entities):** Defined in `src/*/entities/*.entity.ts` using TypeORM decorators.
-- **View (EJS):** All UI templates are stored in `views/` folder, rendering dynamic content from the controller.
-- **Controller:** Located in `src/*/controllers/`, handling HTTP requests and returning rendered pages.
+The request lifecycle in this project:
+
+- **Request** hits the `Controller` (e.g., `products.controller.ts`).
+- **Services** executes business logic (calculating assets, fetching from DB).
+- **Repository** (TypeORM) queries the PostgreSQL database.
+- **Controller:** receives data and renders the EJS View.
+- **Response** sends HTML back to the browser.
 
 ---
 
@@ -113,8 +187,8 @@ Follow these steps to run the project locally:
 
 To test the authentication features, you can use the following credentials or register a new account:
 
-- **Email:** admin.dot@dummy.com
-- **Password:** AdminDOT123!
+- **Email:** admin@gmail.com
+- **Password:** Admin123!0
 - **Role:** Admin
 
 <!-- ## 🎥 Video Demo
@@ -122,3 +196,4 @@ To test the authentication features, you can use the following credentials or re
 [Click here to watch the demo video](#) --- -->
 
 Created by **Bagas Dwiprasandi** for Technical Challenge Submission.
+````
