@@ -1,4 +1,3 @@
-<!-- BREADCRUMB NAVIGATION -->
 <div class="mb-8">
   <nav class="flex items-center gap-2 text-sm text-gray-600">
     <a href="/products" class="hover:text-blue-600 transition">Products</a>
@@ -7,148 +6,210 @@
   </nav>
 </div>
 
-<!-- MAIN CONTENT: 2 COLUMNS -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl">
 
-  <!-- ==================== KOLOM KIRI: IMAGE ==================== -->
   <div class="space-y-4">
-    <div class="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
+    <div class="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
 
-      <!-- PRODUCT IMAGE -->
-      <% if (product.imageUrl) { %>
-        <img
-          src="<%= product.imageUrl %>"
-          alt="<%= product.name %>"
-          class="w-full h-full object-cover"
-        />
+      <% if (product.image_url) { %>
+      <img src="<%= product.image_url %>" alt="<%= product.name %>" class="w-full h-full object-cover"
+        onerror="this.onerror=null;this.src='https://placehold.co/600x600?text=No+Image';" />
       <% } else { %>
-        <!-- FALLBACK: Kalau ga ada gambar -->
-        <div class="w-full h-full flex items-center justify-center">
-          <i class="fas fa-box text-8xl text-gray-300"></i>
-        </div>
+      <div class="w-full h-full flex items-center justify-center bg-gray-50">
+        <i class="fas fa-box text-6xl text-gray-300"></i>
+      </div>
       <% } %>
 
-      <!-- STOCK STATUS BADGE (Floating di kanan atas) -->
       <div class="absolute top-4 right-4">
-        <span class="
-          inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border-2
-          <% if (stockStatus.color === 'green') { %>
-            bg-green-100 text-green-800 border-green-200
-          <% } else if (stockStatus.color === 'yellow') { %>
-            bg-yellow-100 text-yellow-800 border-yellow-200
-          <% } else { %>
-            bg-red-100 text-red-800 border-red-200
-          <% } %>
-        ">
-          <i class="fas fa-circle text-xs"></i>
-          <%= stockStatus.text %>
+        <%
+           // Logic Status Badge Sederhana
+           let badgeClass = 'bg-red-100 text-red-800 border-red-200';
+           let badgeText = 'Out of Stock';
+
+           if (product.stock > 10) {
+              badgeClass = 'bg-green-100 text-green-800 border-green-200';
+              badgeText = 'In Stock';
+           } else if (product.stock > 0) {
+              badgeClass = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+              badgeText = 'Low Stock';
+           }
+        %>
+        <span
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border-2 shadow-sm <%= badgeClass %>">
+          <i class="fas fa-circle text-[10px]"></i>
+          <%= badgeText %>
         </span>
       </div>
     </div>
   </div>
 
-  <!-- ==================== KOLOM KANAN: DETAILS ==================== -->
   <div class="space-y-8">
 
-    <!-- 1. HEADER SECTION -->
-    <div class="space-y-3">
+    <div class="space-y-4">
 
-      <!-- Category Badge -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between">
         <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
           <i class="<%= product.category?.icon || 'fas fa-tag' %>"></i>
           <%= product.category?.name || 'Uncategorized' %>
         </span>
+        <span class="text-xs font-mono text-gray-400">#ID: <%= product.id %></span>
       </div>
 
-      <!-- Product Name -->
-      <h1 class="text-4xl font-bold text-gray-900 leading-tight">
+      <h1 class="text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
         <%= product.name %>
       </h1>
+    </div>
 
-      <!-- Product ID -->
-      <p class="text-sm text-gray-500">
-        #ID: <%= product.id %>
+    <div class="py-6 border-y border-gray-100">
+      <p class="text-5xl font-bold text-blue-600 tracking-tight">
+        <span class="text-2xl font-medium text-gray-400 align-top mr-1">Rp</span>
+        <%= product.price.toLocaleString('id-ID') %>
       </p>
     </div>
 
-    <!-- 2. PRICING SECTION -->
-    <div class="py-4 border-y border-gray-200">
-      <p class="text-5xl font-bold text-blue-600">
-        Rp <%= product.price.toLocaleString('id-ID') %>
-      </p>
-    </div>
-
-    <!-- 3. DESCRIPTION SECTION -->
-    <div class="space-y-3">
-      <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+    <div class="space-y-2">
+      <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400">
         Description
       </h2>
-      <p class="text-base text-gray-700 leading-relaxed">
-        <%= product.description || 'No description available.' %>
+      <p class="text-base text-gray-600 leading-relaxed">
+        <%= product.description || 'No description available for this product.' %>
       </p>
     </div>
 
-    <!-- 4. INVENTORY INFO CARD -->
-    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 space-y-4">
-      <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide flex items-center gap-2">
-        <i class="fas fa-box-open text-blue-600"></i>
-        Inventory Information
-      </h3>
+    <div
+      class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
 
-      <div class="space-y-3">
-        <!-- Stock -->
-        <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-600">Sisa Stok</span>
-          <span class="text-base font-semibold text-gray-900">
-            <%= product.stock %> units
-          </span>
+      <div class="bg-gray-50/50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+          <div class="p-1.5 bg-blue-100 rounded-lg text-blue-600">
+            <i class="fas fa-cubes text-xs"></i>
+          </div>
+          Inventory Status
+        </h3>
+
+        <%
+          const isLowStock = product.stock < 10;
+          const statusColor = isLowStock ? 'red' : 'emerald';
+          const statusText = isLowStock ? 'Attention' : 'Healthy';
+          const statusIcon = isLowStock ? 'fa-exclamation-circle' : 'fa-check-circle';
+        %>
+        <span
+          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide bg-<%= statusColor %>-50 text-<%= statusColor %>-600 border border-<%= statusColor %>-200">
+          <i class="fas <%= statusIcon %>"></i>
+          <%= statusText %>
+        </span>
+      </div>
+
+      <div class="p-6 space-y-6">
+
+        <div>
+          <p class="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Available Stock</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-extrabold text-gray-900 tracking-tight">
+              <%= product.stock %>
+            </span>
+            <span class="text-sm font-medium text-gray-400">units</span>
+          </div>
+
+          <%
+            const widthPercent = Math.min(product.stock, 100) + '%';
+            const barColor = product.stock < 10 ? '#ef4444' : '#10b981';
+
+            const ghostAttribute = `style="width: ${widthPercent}; background-color: ${barColor};"`;
+          %>
+
+          <div class="w-full bg-gray-100 rounded-full h-1.5 mt-3 overflow-hidden">
+            <div class="h-1.5 rounded-full transition-all duration-1000 ease-out" <%- ghostAttribute %>></div>
+          </div>
         </div>
 
-        <!-- SKU (kalau ada) -->
-        <% if (product.sku) { %>
-        <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-600">SKU</span>
-          <span class="text-base font-mono text-gray-900">
-            <%= product.sku %>
-          </span>
-        </div>
-        <% } %>
+        <div class="border-t border-gray-100"></div>
 
-        <!-- Last Update -->
-        <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-600">Terakhir Update</span>
-          <span class="text-base text-gray-900">
-            <%= new Date(product.updatedAt).toLocaleDateString('id-ID', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric'
-            }) %>
-          </span>
+        <div class="grid grid-cols-1 gap-4 pt-2">
+
+          <% if (product.sku) { %>
+          <div class="group/sku cursor-pointer" onclick="copyToClipboard('<%= product.sku %>')">
+            <p class="text-xs text-gray-500 mb-1 flex justify-between">
+              SKU / Code
+              <span
+                class="text-[10px] text-blue-500 font-medium opacity-0 group-hover/sku:opacity-100 transition-opacity">
+                Click to copy
+              </span>
+            </p>
+            <div
+              class="flex items-center justify-between bg-gray-50 px-3 py-2.5 rounded-lg border border-gray-200 group-hover/sku:border-blue-300 group-hover/sku:bg-blue-50/50 transition-colors">
+              <span class="font-mono text-sm text-gray-700 font-medium tracking-wide">
+                <%= product.sku %>
+              </span>
+              <i class="far fa-copy text-gray-400 group-hover/sku:text-blue-500 transition-colors"></i>
+            </div>
+          </div>
+          <% } %>
+
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Last Updated</p>
+            <div
+              class="flex items-center gap-2 text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
+              <i class="far fa-clock text-gray-400"></i>
+
+              <% if (product.updated_at || product.updatedAt) { %>
+              <span class="font-medium">
+                <%= new Date(product.updated_at || product.updatedAt).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                  }) %>
+              </span>
+              <span class="text-gray-300">•</span>
+              <span class="text-gray-500 text-xs">
+                <%= new Date(product.updated_at || product.updatedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) %>
+                WIB
+              </span>
+              <% } else { %>
+              <span class="text-gray-400 italic text-xs">Not recorded</span>
+              <% } %>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- 5. ACTION BUTTONS -->
-    <div class="flex gap-4 pt-4">
-      <!-- Edit Product Button -->
-      <a
-        href="/products/edit/<%= product.id %>"
-        class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all hover:scale-105 hover:shadow-lg"
-      >
+    <div class="flex gap-4 pt-2">
+      <a href="/products/edit/<%= product.id %>"
+        class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 hover:-translate-y-0.5 transition-all shadow-md hover:shadow-lg hover:shadow-blue-200">
         <i class="fas fa-edit"></i>
-        Edit Product
+        Edit Details
       </a>
 
-      <!-- Back Button -->
-      <a
-        href="/products"
-        class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all"
-      >
-        <i class="fas fa-arrow-left"></i>
-        Kembali
+      <a href="/products"
+        class="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back
       </a>
     </div>
 
   </div>
 </div>
+
+<script>
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      // SweetAlert Toast Notification
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+
+      Toast.fire({
+        icon: 'success',
+        title: 'SKU Copied to clipboard!'
+      });
+    });
+  }
+</script>

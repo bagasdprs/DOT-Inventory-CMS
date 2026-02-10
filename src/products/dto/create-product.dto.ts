@@ -6,7 +6,7 @@ import {
   Min,
   IsUrl,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -37,7 +37,8 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   @IsUrl({}, { message: 'Image must be a valid URL' })
-  image_url: string;
+  @Transform(({ value }) => (value === '' ? null : value))
+  image_url?: string;
 
   @IsOptional()
   @IsString()
